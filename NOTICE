@@ -1,0 +1,116 @@
+lab-assistant-models
+===================
+
+SPEECH RECOGNITION MODEL: Phonon 2.5 (ONNX)
+
+This repository mirrors, unmodified, the ONNX export of Phonon 2.5:
+
+  - Phonon 2.5, (c) 2026 Fermion Research
+      https://huggingface.co/FermionResearch/Phonon-2.5
+  - derived from NVIDIA Parakeet TDT 0.6B v3, (c) NVIDIA Corporation
+      https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3
+  - exported to ONNX by enriqueag
+      https://huggingface.co/enriqueag/phonon-2.5-onnx
+      revision 5a76001bd8dfc058632290d2ef594236b7ca2bd4
+
+The model weights are licensed under the Creative Commons Attribution 4.0
+International licence (CC-BY-4.0):
+    https://creativecommons.org/licenses/by/4.0/
+
+The files are mirrored byte-identical in this repository's GitHub Release
+`models-phonon-2.5`:
+
+  encoder.exact2x2.onnx    362728506 bytes
+    sha256 786bb68c5489d2b894b4565e1a123f5ad3d2197e84f5e7ffefca63d1ecf82033
+  decoder_joint.int8.onnx   17644009 bytes
+    sha256 ccfe6ed79343be430a1d706dbfc8dec8b88cd2110bd3a695f8448e10ac34f8c9
+  vocab.txt                    93928 bytes
+    sha256 048eb9ded015a578855d1661c244f4f1101e6d68c82a5c3bce14dff046a11431
+
+The NOTICE of the ONNX export, which includes the original NOTICE of
+Phonon 2.5, follows.
+
+================================================================================
+
+Phonon-2.5 ONNX
+ONNX conversion of FermionResearch/Phonon-2.5, published by enriqueag.
+
+This repository redistributes model weights from Phonon-2.5 by Fermion Research,
+which derives from NVIDIA Parakeet TDT 0.6B v3. The weights remain under the
+Creative Commons Attribution 4.0 International licence (CC-BY-4.0), see LICENSE.
+
+Changes made in this conversion:
+- The FastConformer encoder, prediction network and joint network were exported
+  from the transformers ParakeetForTDT module to ONNX (opset 17).
+- Each five-value encoder weight row {-hi, -lo, 0, lo, hi} is stored as two
+  ternary planes, lo*A + (hi-lo)*B, in one 2-bit MatMulNBits node per linear
+  layer (block size 128). The weight values are unchanged.
+- The int6 decoder and joint tensors are stored as int8 with their original
+  per-row scales and expanded with DequantizeLinear. The values are unchanged.
+- The pointwise convolutions of the conformer convolution module are expressed
+  as matrix multiplications with the same weights.
+- vocab.txt lists the SentencePiece pieces of the original tokenizer.
+The scripts in export/ reproduce the conversion. fermion_container.py is
+Fermion Research's reader, licensed under the Apache License, Version 2.0.
+
+The original NOTICE of Phonon-2.5 follows.
+
+================================================================================
+
+Phonon-2.5
+Copyright 2026 Fermion Research
+
+This product includes software and models developed by Fermion Research.
+
+================================================================================
+BASE MODEL
+================================================================================
+
+This model is derived from NVIDIA's Parakeet TDT 0.6B v3
+(nvidia/parakeet-tdt-0.6b-v3), (c) NVIDIA Corporation, licensed under the
+Creative Commons Attribution 4.0 International licence (CC-BY-4.0).
+
+    https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3
+    https://creativecommons.org/licenses/by/4.0/
+
+Changes: the weights were re-trained for speech in 25 languages and
+compressed by Fermion Research. The FastConformer encoder architecture,
+the TDT decoder, the tokenizer and the feature-extractor configuration
+derive from that model and remain under CC-BY-4.0.
+
+These weights are therefore distributed under CC-BY-4.0. The Fermion code in
+this repository remains under the Apache License, Version 2.0.
+
+================================================================================
+TRAINING DATA
+================================================================================
+
+Training audio includes CHiME-6, distributed under the Creative Commons
+Attribution-ShareAlike 4.0 International licence (CC-BY-SA-4.0)
+
+    https://chimechallenge.github.io/chime6/
+    https://creativecommons.org/licenses/by-sa/4.0/
+
+and SPGISpeech, used under Kensho's public terms
+
+    https://datasets.kensho.com/datasets/spgispeech
+
+================================================================================
+RUNTIME DEPENDENCIES
+================================================================================
+
+MLX ......................... MIT License ......... https://github.com/ml-explore/mlx
+mlx-audio ................... MIT License ......... https://github.com/Blaizzy/mlx-audio
+    The Parakeet model graph (feature extraction, FastConformer encoder,
+    TDT decoder and greedy search) is mlx-audio's implementation.
+NumPy ....................... BSD-3-Clause ........ https://numpy.org
+soundfile ................... BSD-3-Clause ........ https://github.com/bastibe/python-soundfile
+    soundfile links libsndfile (LGPL-2.1), dynamically and unmodified, as
+    distributed in the standard soundfile wheel.
+
+================================================================================
+REFERENCE RUNTIME (optional)
+================================================================================
+
+PyTorch ..................... BSD-3-Clause ........ https://pytorch.org
+transformers ................ Apache-2.0 .......... https://github.com/huggingface/transformers
